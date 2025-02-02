@@ -8,16 +8,18 @@ class Node {
         this.left = null;
         this.bottom = null; 
         this.top = null;
-        this.thickness = 2
+        this.thickness = null
     }
 }
 
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
 
-let nodeDistance = 20;
+let nodeDistance = 25;
 let nodes = [];
-let thres = 0.6
+let threshold_values = [0.53, 0.54, 0.55, 0.56, 0.57];
+let threshold = threshold_values[Math.floor(Math.random() * threshold_values.length)];
+console.log(threshold)
 
 colors = [
     "red", "blue", "green", "yellow", "purple", "cyan", "orange", "white",
@@ -33,9 +35,14 @@ function resizeCanvas() {
 
 function colorCluster(node, color) {
     let stack = [node];
+    let thickness = 2;
 
     while (stack.length > 0) {
         let current = stack.pop();
+        if (current.thickness == null) {
+            current.thickness = thickness
+        }
+
         if (current.color == null) {
             current.color = color;
         }
@@ -68,8 +75,8 @@ function ver_tie(top,bottom) {
     bottom.top = top;
 }
 
-function set_pilo(nodes) {
-    let sx = Math.floor(0.2*window.innerWidth/nodeDistance) 
+function set_pilo() {
+    let sx = Math.floor(window.innerWidth/2/nodeDistance) - 8
     let sy = 1
 
     for (let y = 0; y < 8; y++) {
@@ -82,7 +89,7 @@ function set_pilo(nodes) {
             node.left = null;
             node.top = null;
             node.bottom = null;
-            node.thickness = 3
+            node.thickness = 5;
         }
     }
 
@@ -135,7 +142,6 @@ function set_pilo(nodes) {
 }
 
 
-// Generate nodes in a 2D grid
 function generateNodes() {
     nodes = [];
     let cols = Math.floor(canvas.width / nodeDistance) + 1;
@@ -150,12 +156,12 @@ function generateNodes() {
 
     for (let y = 0; y < nodes.length; y++) {
         for (let x = 0; x < nodes[y].length; x++) {
-            if (Math.random()>thres && x < nodes[y].length - 1){
+            if (Math.random()>threshold && x < nodes[y].length - 1){
                 if (nodes[y][x].right == null){
                     hor_tie(nodes[y][x], nodes[y][x+1])
                 }
             } 
-            if (Math.random()>thres && y < nodes.length - 1) {
+            if (Math.random()>threshold && y < nodes.length - 1) {
                 if (nodes[y][x].bottom == null){
                     ver_tie(nodes[y][x],nodes[y+1][x])
                 }
@@ -163,7 +169,7 @@ function generateNodes() {
         }
     }
 
-    set_pilo(nodes)
+    set_pilo()
 
     let color = 0
     for (let y = 0; y < nodes.length; y++) {

@@ -17,7 +17,7 @@ const ctx = canvas.getContext("2d");
 
 let nodeDistance = 25;
 let nodes = [];
-let threshold_values = [0.53, 0.54, 0.55, 0.56, 0.57];
+let threshold_values = [0.5, 0.53, 0.54, 0.55, 0.56, 0.57, 0.6];
 let threshold = threshold_values[Math.floor(Math.random() * threshold_values.length)];
 console.log(threshold)
 
